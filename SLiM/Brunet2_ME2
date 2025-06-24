@@ -1,0 +1,58 @@
+// set up a simple neutral simulation
+initialize() {
+	initializeSLiMModelType("nonWF");
+	initializeMutationRate(1e-4);        //inverse of size of genomic element
+	initializeMutationType("m1", 1.0, "n", 1, 0.5);
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElement(g1, 0, 1e4); 
+	initializeRecombinationRate(0);
+	defineConstant('N', 100);
+	defineConstant('CHILDS_PER_F', 2*2);
+	initializeTreeSeq();
+	defineGlobal('minFitness', 0);
+	initializeSex();
+}
+
+reproduction(){
+	if (individual.sex == 'F'){
+		for (_ in 1:CHILDS_PER_F){
+			mate = subpop.sampleIndividuals(1, sex='M', minAge=1);
+			subpop.addCrossed(individual, mate);
+		}	
+	}
+}
+
+survival(){
+	if (individual.age > 0){return F;}
+	else {
+		muts = c(individual.haploidGenome1.mutations, individual.haploidGenome2.mutations);
+		fitness_ind = 0.0;
+		for (m in muts){
+			fitness_ind = fitness_ind + m.selectionCoeff;
+			}
+		if (fitness_ind >= minFitness){return T;}
+		else {return F;}
+	}
+}
+
+2: early(){
+	children = p1.individuals[p1.individuals.age == 0];
+	fitness = sapply(children, "muts = c(applyValue.haploidGenome1.mutations, applyValue.haploidGenome2.mutations);fitness = 0.0;for (m in muts){fitness = fitness + m.selectionCoeff;}return fitness;");
+	defineGlobal('minFitness', sort(fitness, ascending=F)[N-1]);
+}
+
+// create a population of 500 individuals
+1 early() {
+	sim.addSubpop("p1", N);
+	defineConstant('start_time', clock());
+}
+
+//NO REPRODUCTION at tick 1
+//first -> reproduction -> early -> fitnessEffect -> survival -> late
+
+
+(10*N):(10 + 10*N) late(){
+	sim.treeSeqOutput("Brunet2 " + N + "ME2gen" + community.tick + ".trees");
+}
+
+//L'ARBRE EST EN DOUBLE PARCE QUE HAPLOIDE !!!!!!!!!// set up a simple neutral simulation
