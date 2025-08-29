@@ -5,13 +5,16 @@ Each model is associated a suffix, with respect to the following table :
 
 | Suffix | Model |
 |----------|----------|
-| _ARGS | Model A, diploid, with arguments that can be changed |
+| _ARGS | Model A1, diploid, with arguments that can be changed |
+| X | Model A1, with hermaphrodism |
 | H | Model A, haploid |
 | E | Exponential model, diploid |
 | EH | Exponential model, haploid |
 | M | Mutations model, diploid |
 | MH | Mutations model, haploid |
-| A2 | Model A with fitness based on chromosomes, diploid |
+| A2 | Model A2, diploid |
+| A2M | Model A2 except that only the 10 males with the highest fitness are chosen during reproduction |
+| A2MX | Model A2 with hermaphrodism, except that only the 10 fittest individuals can reproduce |
 
 # Run simulations
 To run SLiM simulations, run `simulate3.py` with a given suffix and population size (and eventually arguments). This file also creates the tree files and extract their data into `.json` files.  
