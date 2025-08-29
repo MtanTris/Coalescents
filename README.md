@@ -5,19 +5,13 @@ Each model is associated a suffix, with respect to the following table :
 
 | Suffix | Model |
 |----------|----------|
-| _ | Model A, diploid |
+| _ARGS | Model A, diploid, with arguments that can be changed |
 | H | Model A, haploid |
 | E | Exponential model, diploid |
 | EH | Exponential model, haploid |
 | M | Mutations model, diploid |
 | MH | Mutations model, haploid |
 | A2 | Model A with fitness based on chromosomes, diploid |
-| A2MAX | ... |
-| Row 9    | Data     |
-| Row 10   | Data     |
-| Row 11   | Data     |
-| Row 12   | Data     |
-| Row 13   | Data     |
 
 # Run simulations
 To run SLiM simulations, run `simulate3.py` with a given suffix and population size (and eventually arguments). This file also creates the tree files and extract their data into `.json` files.  
@@ -27,7 +21,7 @@ To use `simulate3.py`, three folder paths will need to be precised in the \textt
 - `cwd` is the folder where the tree files are stored before being analyzed. This folder is separated from the rest in case an error arises during the analysis.
 - `T2\_dest` is the folder where the `.json` files will be stored after the trees are analyzed. The `.json` files are sorted by model and by population size.
 
-For some models, some arguments can be changed before starting the simulations. They can be used to change the dominance coefficient $s$, the number $k$ of children per female (for sexual diploids) or per individual, and the gap in generations between the recording of two trees. This parameter should be at least a few hundreds, even if it was only 1 during my internship.
+For model A, some arguments can be changed before starting the simulations. They can be used to change the dominance coefficient $s$, the number $k$ of children per female (for sexual diploids) or per individual. This implementation with arguments is only available with model A as I did not want to change the other models without properly testing them, but don't hesistate do add arguments to the other models if necessary.
 
 # Plot results
 Once enough simulations are run, you can analyze data by using plot3.py. Computing the averages sadly also takes a lot of time.
