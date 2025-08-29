@@ -20,7 +20,17 @@ Each model is associated a suffix, with respect to the following table :
 | Row 13   | Data     |
 
 # Run simulations
-To run SLiM simulations, run simulate3.py with a given suffix and population size. Don't forget to change the paths.
+To run SLiM simulations, run `simulate3.py` with a given suffix and population size (and eventually arguments). This file also creates the tree files and extract their data into `.json` files.  
+
+To use `simulate3.py`, three folder paths will need to be precised in the \texttt{main} function.
+- `slim\_path` is the folder where the SLiM files will be stored.
+- `cwd` is the folder where the tree files are stored before being analyzed. This folder is separated from the rest in case an error arises during the analysis.
+- `T2\_dest` is the folder where the `.json` files will be stored after the trees are analyzed. The `.json` files are sorted by model and by population size.
+
+For some models, some arguments can be changed before starting the simulations. They can be used to change the dominance coefficient $s$, the number $k$ of children per female (for sexual diploids) or per individual, and the gap in generations between the recording of two trees. This parameter should be at least a few hundreds, even if it was only 1 during my internship.
 
 # Plot results
-Once enough simulations are run, you can analyze data by using plot3.py.
+Once enough simulations are run, you can analyze data by using plot3.py. Computing the averages sadly also takes a lot of time.
+
+# Report
+For more insight about the models, don't hesitate to check my internship report (inside the repository).
