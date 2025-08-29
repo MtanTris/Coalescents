@@ -1,0 +1,71 @@
+// set up a simple neutral simulation
+initialize() {
+	initializeSLiMModelType("nonWF");
+	initializeMutationRate(0);
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElement(g1, 0, 99999);
+	initializeRecombinationRate(0);
+	initializeTreeSeq(checkCoalescence=T);
+	initializeSex();
+	defineConstant('N', 10000);
+	defineConstant('arg1', 0.5);
+	defineConstant('arg2', 32);
+	defineGlobal('counter', 0);
+	//setSeed(4421844);
+}
+
+reproduction(){
+	if (individual.sex == 'F'){
+		for (_ in 1:arg2){
+			mate = subpop.sampleIndividuals(1, sex='M', minAge=1);
+			child = subpop.addCrossed(individual, mate);
+			child.tagF = arg1*max(mate.tagF, individual.tagF) + (1-arg1)*min(mate.tagF, individual.tagF) + runif(1);
+		}	
+	}
+}
+
+survival(){
+	if (individual.age > 0){return F;}
+	else {	
+		if (individual.tagF < min_fitness){return F;} else {
+			return T;
+		}
+	}
+} 
+
+// create a population of 500 individuals
+1 early() {
+	sim.addSubpop("p1", N);
+	p1.individuals.tagF = 1.0;
+	defineConstant('start_time', clock());
+}
+
+//NO REPRODUCTION at tick 1
+//first -> reproduction -> early -> fitnessEffect -> survival -> late
+
+1: early(){
+	children = p1.individuals[p1.individuals.age == 0];
+	sorted_fitness = sort(children.tagF, ascending=F);
+	defineGlobal('min_fitness', sorted_fitness[N-1]);
+}
+
+2: late(){
+   if (sim.treeSeqCoalesced()){
+		sim.treeSeqOutput("Brunet2 " + N + "_ARGS" + arg1 + "_" + arg2 + "gen" + community.tick + ".trees");
+		defineGlobal('counter', counter+1);
+		if (counter == 2000){
+			sim.simulationFinished();
+		}
+	}
+}
+
+//(10*N):(10*N+200) late(){
+//	if (sim.treeSeqCoalesced()){
+//		sim.treeSeqOutput("Brunet2 " + N + "_ARGS" + arg1 + "_" + arg2 + "gen" + community.tick + ".trees");
+//	}
+//}
+
+1000000000 late(){
+	sim.simulationFinished();
+}
